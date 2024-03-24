@@ -1,10 +1,6 @@
 import json
-import random
-import string
-import pika
 import time
 import os
-import signal
 from dotenv import load_dotenv
 from kombu import Connection, Exchange, Producer
 
@@ -71,22 +67,30 @@ def send_pairs(pair):
         print(e)
 
 
-with Connection(broker_url) as conn:
-    simple_queue = conn.SimpleQueue(CLIENT_QUEUE_QUEUE_NAME)
-    queue_size = simple_queue.qsize()
+def main():
+    try:
+        with Connection(broker_url) as conn:
+            while True:
+                simple_queue = conn.SimpleQueue(CLIENT_QUEUE_QUEUE_NAME)
+                queue_size = simple_queue.qsize()
 
-    for i in range((queue_size - 2) // 2):
-        l = ["p1", "p2"]
-        pair = {}
+                for i in range((queue_size - 2) // 2):
+                    l = ["p1", "p2"]
+                    pair = {}
 
-        for j in range(2):
+                    for j in range(2):
 
-            message = simple_queue.get(block=False)
-            # print(f"Message {i + 1}: {message.payload}")
-            pair[l[j]] = message.payload
-            message.ack()
-        print(pair)
+                        message = simple_queue.get(block=False)
+                        pair[l[j]] = message.payload
+                        message.ack()
+                    print(pair)
 
-        send_pairs(pair)
+                    send_pairs(pair)
+                time.sleep(2)
+    except KeyboardInterrupt:
+        print("exiting   gracefully")
 
-    simple_queue.close()
+
+if __name__ == "__main__":
+    print("pairing server up and running ...")
+    main()
