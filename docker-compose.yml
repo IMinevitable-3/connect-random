@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  channel_layer:
+    container_name: channel_layer
+    image: redis:7.2.4-bookworm
+    restart: always
+    ports:
+      - "6379:6379"
+
+  client_queue:
+    container_name: client_queue
+    build:
+      context: ./client_queue
+      dockerfile: Dockerfile.queue
+    hostname: client_queue
+    volumes:
+      - ./init/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./init/definitions.json:/etc/rabbitmq/definitions.json:ro
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+volumes:
+  rabbitmq.conf:
+  definitions.json:
