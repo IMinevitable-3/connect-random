@@ -6,6 +6,7 @@ from channels.security.websocket import AllowedHostsOriginValidator
 from channels.sessions import SessionMiddlewareStack
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.core.asgi import get_asgi_application
+from channels.auth import AuthMiddlewareStack
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "server.settings")
 default_asgi_application = get_asgi_application()
@@ -17,14 +18,16 @@ from rest_api import consumers
 application = ProtocolTypeRouter(
     {
         "http": default_asgi_application,
-        "websocket": URLRouter(
-            [
-                path(
-                    "ws/task/<str:taskID>/",
-                    consumers.TaskProgressConsumer.as_asgi(),
-                ),
-                path("ws/echo/", consumers.EchoConsumer.as_asgi()),
-            ]
+        "websocket": SessionMiddlewareStack(
+            URLRouter(
+                [
+                    path("ws/echo/", consumers.EchoConsumer.as_asgi()),
+                    path(
+                        "ws/chat/online/",
+                        consumers.OnlineConsumer.as_asgi(),
+                    ),
+                ]
+            ),
         ),
     }
 )
