@@ -45,10 +45,12 @@ def process_paired_queue_message(m1, m2):
         f"amqp://{CLIENT_QUEUE_USER}:{CLIENT_QUEUE_PASSWORD}@{CLIENT_QUEUE_HOST}:{CLIENT_QUEUE_PORT}/"
     )
     if status_of_c1 is None:
-        send_again(amqp_manager, m2)
+        if status_of_c2 is not None:
+            send_again(amqp_manager, m2)
         return 0
     if status_of_c2 is None:
-        send_again(amqp_manager, m1)
+        if status_of_c1 is not None:
+            send_again(amqp_manager, m1)
         return 0
 
     channel_layer = get_channel_layer()

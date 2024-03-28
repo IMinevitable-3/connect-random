@@ -65,13 +65,21 @@ DATABASES = {
 
 from environ import REDIS_HOST, REDIS_PORT
 
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [
+#                 (REDIS_HOST, REDIS_PORT),
+#             ],
+#         },
+#     },
+# }
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [
-                (REDIS_HOST, REDIS_PORT),
-            ],
+            "hosts": ["redis://" + REDIS_HOST + ":" + REDIS_PORT + "/1"],
         },
     },
 }
@@ -79,7 +87,7 @@ CHANNEL_LAYERS = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",  # Use a different database (e.g., 1)
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/3",  # Use a different database (e.g., 1)
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },

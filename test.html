@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSocket Chat</title>
+    <style>
+      /* Add your CSS styles here */
+    </style>
+  </head>
+  <body>
+    <div id="chat">
+      <!-- Chat messages will be displayed here -->
+    </div>
+    <input type="text" id="messageInput" placeholder="Type a message..." />
+    <button id="sendButton">Send</button>
+
+    <script>
+      const socket = new WebSocket("ws://localhost:8000/ws/echo/");
+
+      socket.onopen = () => {
+        console.log("WebSocket connection established.");
+      };
+
+      socket.onmessage = (event) => {
+        const message = JSON.parse(event.data).message;
+        appendMessageToChat(message);
+      };
+
+      socket.onclose = () => {
+        console.log("WebSocket connection closed.");
+      };
+
+      document.getElementById("sendButton").addEventListener("click", () => {
+        const messageInput = document.getElementById("messageInput");
+        const message = messageInput.value.trim();
+        if (message !== "") {
+          socket.send(JSON.stringify({ message }));
+          messageInput.value = ""; // Clear input field after sending
+        }
+      });
+
+      function appendMessageToChat(message) {
+        const chat = document.getElementById("chat");
+        const messageElement = document.createElement("div");
+        messageElement.textContent = message;
+        chat.appendChild(messageElement);
+      }
+    </script>
+  </body>
+</html>

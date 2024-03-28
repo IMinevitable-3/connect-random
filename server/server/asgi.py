@@ -26,6 +26,7 @@ application = ProtocolTypeRouter(
                         "ws/chat/online/",
                         consumers.OnlineConsumer.as_asgi(),
                     ),
+                    path("ws/chat/<str:group_id>/", consumers.ChatConsumer.as_asgi()),
                 ]
             ),
         ),
