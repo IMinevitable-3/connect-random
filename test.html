@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WebSocket Chat</title>
-    <style>
-      /* Add your CSS styles here */
-    </style>
+    <style></style>
   </head>
   <body>
     <div id="chat">
@@ -36,7 +34,7 @@
         const message = messageInput.value.trim();
         if (message !== "") {
           socket.send(JSON.stringify({ message }));
-          messageInput.value = ""; // Clear input field after sending
+          messageInput.value = "";
         }
       });
 
