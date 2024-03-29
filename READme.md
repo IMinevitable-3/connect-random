@@ -33,8 +33,8 @@ cd pairing_server && python3 pairing_server.py
 
 **setting up celery worker**
 
-````
- celery -A server worker --queues=paired_queue --loglevel=info```
-````
+```sh
+ celery -A server worker --queues=paired_queue --loglevel=info
+```
 
 ### [End points](https://zerobin.org/?fe70058332018577#57kFsSgmuRJBv51iN8ohCpkLB6LcXT3aGR9YiRy8qkkd)
